@@ -1,16 +1,94 @@
-# React + Vite
+# 🔗 Linktree avec Statut Discord
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application Linktree React avec intégration du statut Discord en temps réel.
 
-Currently, two official plugins are available:
+## 📁 Structure du Projet
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+linktree/
+├── src/              # Frontend React
+├── server/           # Backend Node.js (Discord Bot)
+├── public/           # Assets statiques
+├── Dockerfile        # Configuration Docker
+├── docker-compose.yml # Orchestration Docker
+└── package.json      # Scripts principaux
+```
 
-## React Compiler
+## 🚀 Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Cloner le projet
+```bash
+git clone https://github.com/slouowzee/linktree.git
+cd linktree
+```
 
-## Expanding the ESLint configuration
+### 2. Installer toutes les dépendances
+```bash
+npm install                 # Frontend
+npm run server:install      # Backend
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Configuration Discord
+
+Créez `server/.env` (copier depuis `server/.env.example`) :
+```env
+DISCORD_BOT_TOKEN=votre_token_bot
+DISCORD_GUILD_ID=votre_server_id
+DISCORD_USER_ID=votre_user_id
+```
+
+Voir [server/README.md](./server/README.md) pour la configuration complète.
+
+## ⚡ Démarrage Rapide
+
+### Une seule commande pour tout lancer !
+```bash
+npm start
+```
+
+Cette commande lance automatiquement :
+- ✅ Frontend React sur http://localhost:5173
+- ✅ Backend Discord Bot sur http://localhost:3001
+
+### Ou séparément
+```bash
+npm run dev      # Frontend seulement
+npm run server   # Backend seulement
+```
+
+## 🐳 Déploiement Docker
+
+```bash
+docker-compose up -d
+```
+
+Voir [DEPLOY.md](./DEPLOY.md) pour plus de détails.
+
+## 🛠️ Scripts Disponibles
+
+| Commande | Description |
+|----------|-------------|
+| `npm start` | 🚀 Lance frontend + backend ensemble |
+| `npm run dev` | Démarre le frontend React |
+| `npm run server` | Démarre le backend Discord |
+| `npm run build` | Build le frontend pour production |
+| `npm run server:install` | Installe les dépendances du serveur |
+
+## 🔄 Statuts Discord
+
+- 🟢 `online` - En ligne
+- 🟡 `idle` - Absent
+- 🔴 `dnd` - Ne pas déranger
+- ⚫ `offline` - Hors ligne
+
+## 📡 API Endpoints
+
+- `GET http://localhost:3001/api/discord-status` - Statut actuel
+- `GET http://localhost:3001/api/health` - Health check
+
+## 📦 Technologies
+
+- **Frontend**: React + Vite + TailwindCSS
+- **Backend**: Node.js + Express + discord.js
+- **Dev Tools**: Concurrently
+- **Deployment**: Docker + Docker Compose

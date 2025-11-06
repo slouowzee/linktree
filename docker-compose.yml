@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  linktree:
+    build: .
+    container_name: linktree-app
+    ports:
+      - "5173:5173"  # Frontend
+      - "3001:3001"  # Backend API
+    env_file:
+      - ./server/.env
+    restart: unless-stopped
+    networks:
+      - linktree-network
+
+networks:
+  slouowze-dot-net:
+    driver: bridge
