@@ -25,3 +25,7 @@ dist-ssr
 *.sw?
 .env
 server/.env
+
+# Docker
+*.log
+docker-compose.override.yml

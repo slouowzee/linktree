@@ -1,18 +1,24 @@
-version: '3.8'
-
 services:
-  linktree:
-    build: .
-    container_name: linktree-app
-    ports:
-      - "5173:5173"  # Frontend
-      - "3001:3001"  # Backend API
-    env_file:
-      - ./server/.env
+  frontend:
+    build:
+      context: ./linktree
+      dockerfile: Dockerfile
+    container_name: linktree-frontend
     restart: unless-stopped
     networks:
-      - linktree-network
+      - slouowze-dot-fr
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: linktree-backend
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    networks:
+      - slouowze-dot-fr
 
 networks:
-  slouowze-dot-net:
-    driver: bridge
+  slouowze-dot-fr:
+    external: true
