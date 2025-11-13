@@ -1,31 +1,72 @@
-# Logs
+# ==========================================
+# LOGS
+# ==========================================
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-server/node_modules
-dist
-dist-ssr
+# ==========================================
+# DEPENDENCIES
+# ==========================================
+node_modules/
+linktree/node_modules/
+server/node_modules/
+.pnp
+.pnp.js
+
+# ==========================================
+# BUILD & DIST
+# ==========================================
+dist/
+dist-ssr/
+build/
+linktree/dist/
 *.local
 
-# Editor directories and files
+# ==========================================
+# ENV & SECRETS
+# ==========================================
+server/.env
+
+# ==========================================
+# EDITORS & IDEs
+# ==========================================
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.env
-server/.env
+*.swp
+*.swo
+*~
 
-# Docker
-*.log
+# ==========================================
+# DOCKER
+# ==========================================
 docker-compose.override.yml
+
+# ==========================================
+# TESTING
+# ==========================================
+coverage/
+*.coverage
+.nyc_output/
+
+# ==========================================
+# CACHE
+# ==========================================
+.cache/
+.parcel-cache/
+.eslintcache
+
+# ==========================================
+# MISC
+# ==========================================
+*.bak
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
