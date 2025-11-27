@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 .App {
-	background-image: url('./assets/images/background.jpg');
+	background-image: url('./assets/images/background5.webp');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
