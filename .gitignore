@@ -27,6 +27,7 @@ linktree/dist/
 # ENV & SECRETS
 # ==========================================
 server/.env
+linktree/.env
 
 # ==========================================
 # EDITORS & IDEs

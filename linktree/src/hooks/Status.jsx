@@ -7,7 +7,8 @@ const Status = () => {
 	useEffect(() => {
 		const fetchStatus = async () => {
 			try {
-				const response = await fetch('/api/discord-status');
+				
+				const response = await fetch(import.meta.env.VITE_API_ENDPOINT ?? '/api/discord-status');
 				
 				if (!response.ok) {
 					throw new Error(`API error: ${response.status}`);
