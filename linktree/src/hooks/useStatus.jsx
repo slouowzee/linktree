@@ -5,7 +5,9 @@ const useStatus = () => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const endpoint = import.meta.env.VITE_API_ENDPOINT;
+		// En utilisant un chemin relatif, ça fonctionnera aussi bien en dev (via proxy Vite) 
+		// qu'en prod (via proxy Nginx) sans avoir besoin de variables d'environnement.
+		const endpoint = '/api/discord-status/stream';
 		
 		const eventSource = new EventSource(endpoint);
 
