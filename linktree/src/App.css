@@ -1,9 +1,126 @@
 @import "tailwindcss";
 
-.App {
-	background-image: url('./assets/images/background5.webp');
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
+@variant dark (&:where(.dark, .dark *));
+
+@layer theme {
+  :root {
+    --background: #fafafa;
+    --foreground: #09090b;
+    --card: #ffffff;
+    --card-foreground: #09090b;
+    --border: #e4e4e7;
+    --muted: #f4f4f5;
+    --muted-foreground: #71717a;
+
+    --bg-color: var(--background);
+    --bg-surface: var(--card);
+    --bg-elevated: var(--muted);
+    --text-color: var(--foreground);
+    --text-muted: var(--muted-foreground);
+    --border-color: var(--border);
+    --status-ring: var(--background);
+
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --icon-filter: none;
+  }
+
+  .dark {
+    --background: #09090b;
+    --foreground: #fafafa;
+    --card: #18181b;
+    --card-foreground: #fafafa;
+    --border: #27272a;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+
+    --status-ring: var(--background);
+
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
+    --icon-filter: invert(1) brightness(1.1);
+  }
+}
+
+html[data-vt-dir="to-dark"]::view-transition-old(root) {
+  z-index: 0;
+  animation: none;
+}
+html[data-vt-dir="to-dark"]::view-transition-new(root) {
+  z-index: 1;
+  animation: vt-expand 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+html[data-vt-dir="to-light"]::view-transition-old(root) {
+  z-index: 0;
+  animation: none;
+}
+html[data-vt-dir="to-light"]::view-transition-new(root) {
+  z-index: 1;
+  animation: vt-expand 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: 0;
+}
+::view-transition-new(root) {
+  z-index: 1;
+  animation: vt-expand 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes vt-expand {
+  from { clip-path: circle(0% at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  to   { clip-path: circle(160% at var(--vt-x, 50%) var(--vt-y, 50%)); }
+}
+
+@keyframes vt-retract {
+  from { clip-path: circle(160% at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  to   { clip-path: circle(0% at var(--vt-x, 50%) var(--vt-y, 50%)); }
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.dark body {
+  background-image: radial-gradient(
+    ellipse 70% 35% at 50% -5%,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 70%
+  );
+}
+
+.icon-mono {
+  filter: var(--icon-filter);
+  transition: filter 0.3s ease;
+}
+
+.dark .badge-container {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  box-shadow: none !important;
+}
+
+.animate-marquee {
+	display: flex;
+	white-space: nowrap;
+	animation: marquee 15s linear infinite;
+	will-change: transform;
+}
+
+@keyframes marquee {
+	0%   { transform: translateX(0); }
+	100% { transform: translateX(-50%); }
+}
+
+.mask-edges {
+	-webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+	mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }

@@ -1,6 +1,9 @@
 const { Client, GatewayIntentBits, Events } = require('discord.js');
+const { EventEmitter } = require('events');
 process.env.DOTENV_CONFIG_QUIET = 'true';
 require('dotenv').config();
+
+const statusEmitter = new EventEmitter();
 
 const client = new Client({
   intents: [
@@ -16,26 +19,48 @@ let userStatus = {
   lastUpdate: null
 };
 
-function updateStatus(presence) {
+async function updateStatus(presence) {
   if (!presence) {
     userStatus = {
+      ...userStatus,
       status: 'offline',
-      activities: [],
-      lastUpdate: new Date().toISOString()
+      activities: []
     };
+    statusEmitter.emit('update', userStatus);
     return;
   }
 
-  userStatus = {
-    status: presence.status || 'offline',
-    activities: presence.activities?.map(activity => ({
-      name: activity.name,
-      type: activity.type,
-      details: activity.details,
-      state: activity.state
-    })) || [],
-    lastUpdate: new Date().toISOString()
-  };
+  let user = presence.user;
+  if (!user) {
+    try {
+        user = await client.users.fetch(process.env.DISCORD_USER_ID);
+    } catch (e) {
+        console.error('[BOT] Could not fetch user:', e.message);
+    }
+  }
+
+userStatus = {
+	status: presence.status || 'offline',
+	activities: presence.activities?.map(activity => ({
+		name: activity.name,
+		type: activity.type,
+		details: activity.details,
+		state: activity.state,
+		syncId: activity.syncId,
+		url: activity.url,
+		assets: activity.assets ? {
+			largeImage: activity.assets.largeImage,
+			largeText: activity.assets.largeText,
+			smallImage: activity.assets.smallImage,
+			smallText: activity.assets.smallText
+		} : null,
+		button: activity.buttons?.[0]
+	})) || [],
+	avatarURL: user?.displayAvatarURL({ dynamic: true, size: 256 }) || userStatus.avatarURL,
+	lastUpdate: new Date().toISOString()
+};
+
+  statusEmitter.emit('update', userStatus);
 }
 
 client.once(Events.ClientReady, async () => {
@@ -46,7 +71,6 @@ client.once(Events.ClientReady, async () => {
     const member = await guild.members.fetch(process.env.DISCORD_USER_ID);
     
     updateStatus(member.presence);
-    console.log(`[BOT] Status: ${userStatus.status}`);
   } catch (error) {
     console.error('[BOT] Init error:', error.message);
   }
@@ -55,7 +79,13 @@ client.once(Events.ClientReady, async () => {
 client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
   if (newPresence.userId === process.env.DISCORD_USER_ID) {
     updateStatus(newPresence);
-    console.log(`[BOT] ${userStatus.status}`);
+  }
+});
+
+client.on(Events.UserUpdate, (oldUser, newUser) => {
+  if (newUser.id === process.env.DISCORD_USER_ID) {
+    userStatus.avatarURL = newUser.displayAvatarURL({ dynamic: true, size: 256 }) || userStatus.avatarURL;
+    statusEmitter.emit('update', userStatus);
   }
 });
 
@@ -64,9 +94,8 @@ client.on(Events.Error, (error) => {
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN)
-  .catch(() => {
-    console.error('[BOT] Connection failed');
-    process.exit(1);
+  .catch((err) => {
+    console.error('[BOT] Connection failed:', err.message);
   });
 
 function getUserStatus() {
@@ -77,4 +106,4 @@ function isReady() {
   return client.isReady();
 }
 
-module.exports = { getUserStatus, isReady };
+module.exports = { getUserStatus, isReady, statusEmitter };
