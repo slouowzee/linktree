@@ -152,7 +152,6 @@ const ActivityBadge = ({ activities, loading }) => {
         {
             check: a => a.name && a.name.toLowerCase().includes('anime sama'),
             render: a => {
-				console.log(a);
                 let linkUrl;
 
 				const button = a.button?.toLowerCase() || '';
