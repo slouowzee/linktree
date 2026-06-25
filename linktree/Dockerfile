@@ -25,4 +25,4 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 RUN rm -f /etc/nginx/conf.d/default.conf.default
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD envsubst '${BACKEND_HOST}' < /etc/nginx/conf.d/default.conf > /tmp/default.conf && mv /tmp/default.conf /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
